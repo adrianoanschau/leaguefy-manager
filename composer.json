@@ -1,0 +1,25 @@
+{
+    "name": "leaguefy/leaguefy-manager",
+    "description": "Leaguefy Manager - E-Sports Manager.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Leaguefy\\LeaguefyManager\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adriano Anschau"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Leaguefy\\LeaguefyManager\\LeaguefyManagerServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}
