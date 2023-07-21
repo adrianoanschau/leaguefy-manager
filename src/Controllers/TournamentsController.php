@@ -7,13 +7,16 @@ use Illuminate\Support\Str;
 use Leaguefy\LeaguefyManager\Models\Game;
 use Leaguefy\LeaguefyManager\Models\Tournament;
 use Illuminate\Http\Request;
+use Leaguefy\LeaguefyManager\Services\TournamentsService;
 use Leaguefy\LeaguefyManager\Traits\ApiResource;
 
 class TournamentsController extends Controller
 {
     use ApiResource;
 
-    public function __construct() {
+    public function __construct(
+        private TournamentsService $tournamentsService,
+    ) {
         $this->include(['game']);
     }
 
@@ -22,7 +25,7 @@ class TournamentsController extends Controller
      */
     public function index()
     {
-        $tournaments = Tournament::all()->load(['game']);
+        $tournaments = $this->tournamentsService->list();
 
         return $this->data($tournaments)->response();
     }

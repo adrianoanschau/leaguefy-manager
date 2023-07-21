@@ -6,13 +6,16 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Leaguefy\LeaguefyManager\Models\Game;
 use Illuminate\Http\Request;
+use Leaguefy\LeaguefyManager\Services\GamesService;
 use Leaguefy\LeaguefyManager\Traits\ApiResource;
 
 class GamesController extends Controller
 {
     use ApiResource;
 
-    public function __construct() {
+    public function __construct(
+        private GamesService $gamesService,
+    ) {
         $this->include(['teams', 'tournaments']);
     }
 
@@ -21,7 +24,7 @@ class GamesController extends Controller
      */
     public function index()
     {
-        $games = Game::all()->load(['teams', 'tournaments']);
+        $games = $this->gamesService->list();
 
         return $this->data($games)->response();
     }

@@ -7,13 +7,16 @@ use Illuminate\Support\Str;
 use Leaguefy\LeaguefyManager\Models\Game;
 use Leaguefy\LeaguefyManager\Models\Team;
 use Illuminate\Http\Request;
+use Leaguefy\LeaguefyManager\Services\TeamsService;
 use Leaguefy\LeaguefyManager\Traits\ApiResource;
 
 class TeamsController extends Controller
 {
     use ApiResource;
 
-    public function __construct() {
+    public function __construct(
+        private TeamsService $teamsService,
+    ) {
         $this->include(['game']);
     }
 
@@ -22,7 +25,7 @@ class TeamsController extends Controller
      */
     public function index()
     {
-        $teams = Team::all()->load(['game']);
+        $teams = $this->teamsService->list();
 
         return $this->data($teams)->response();
     }
