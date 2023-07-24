@@ -15,13 +15,14 @@ class CreateTournamentConfigsTable extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('tournament_id')
                 ->unique();
+            $table->json('options')
+                ->nullable();
+            $table->timestamps();
+
             $table->foreign('tournament_id')
                 ->references('id')
                 ->on(config('leaguefy-manager.database.tables.tournaments'))
                 ->onDelete('cascade');
-            $table->json('options')
-                ->nullable();
-            $table->timestamps();
         });
     }
 

@@ -2,10 +2,6 @@
 
 namespace Leaguefy\LeaguefyManager\Controllers;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Leaguefy\LeaguefyManager\Models\Game;
-use Leaguefy\LeaguefyManager\Models\Tournament;
 use Illuminate\Http\Request;
 use Leaguefy\LeaguefyManager\Services\TournamentsService;
 use Leaguefy\LeaguefyManager\Traits\ApiResource;
@@ -17,7 +13,7 @@ class TournamentsController extends Controller
     public function __construct(
         private TournamentsService $tournamentsService,
     ) {
-        $this->include(['game']);
+        $this->include(['game', 'stages']);
     }
 
     /**
@@ -25,7 +21,7 @@ class TournamentsController extends Controller
      */
     public function index()
     {
-        $tournaments = $this->tournamentsService->list();
+        $tournaments = $this->tournamentsService->list()->load(['game', 'stages']);
 
         return $this->data($tournaments)->response();
     }
@@ -36,27 +32,7 @@ class TournamentsController extends Controller
     public function store(Request $request)
     {
         try {
-            $validate = Validator::make($request->all(),
-                [
-                    'name' => 'required',
-                    'game' => 'required',
-                ],
-            );
-
-            if ($validate->fails()) {
-                return $this
-                    ->status(400)
-                    ->errors($validate->errors())
-                    ->message('Validation error')
-                    ->response();
-            }
-
-            $game = Game::where('slug', $request->game)->first();
-
-            $tournament = $game->tournaments()->create([
-                'name' => $request->name,
-                'slug' => Str::slug($request->name, '-'),
-            ])->load(['game']);
+            $tournament = $this->tournamentsService->store($request)->load(['game', 'stages']);
 
             return $this
                 ->data($tournament)
@@ -74,24 +50,24 @@ class TournamentsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $tournament)
+    public function show(int $id)
     {
-        return $this->data(Tournament::find($tournament)->load(['game']))->response();
+        return $this->data($this->tournamentsService->find($id)->load(['game', 'stages']))->response();
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tournament $game)
+    public function update(int $id, Request $request)
     {
-        //
+        return $this->tournamentsService->update($id, $request)->load(['game', 'stages']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tournament $game)
+    public function destroy(int $id)
     {
-        //
+        return $this->tournamentsService->destroy($id);
     }
 }

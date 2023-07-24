@@ -20,22 +20,26 @@ class CreateMatchesTable extends Migration
             $table->integer('group');
             $table->integer('match');
             $table->unsignedBigInteger('left_team_id');
-            $table->foreign('left_team_id')
-                ->references('id')
-                ->on(config('leaguefy-manager.database.tables.teams'));
             $table->unsignedBigInteger('right_team_id');
-            $table->foreign('right_team_id')
-                ->references('id')
-                ->on(config('leaguefy-manager.database.tables.teams'));
             $table->unsignedBigInteger('tournament_id');
-            $table->foreign('tournament_id')
-                ->references('id')
-                ->on(config('leaguefy-manager.database.tables.tournaments'));
             $table->integer('left_score')
                 ->nullable();
             $table->integer('right_score')
                 ->nullable();
             $table->timestamps();
+
+            $table->foreign('left_team_id')
+                ->references('id')
+                ->on(config('leaguefy-manager.database.tables.teams'))
+                ->onDelete('cascade');
+            $table->foreign('right_team_id')
+                ->references('id')
+                ->on(config('leaguefy-manager.database.tables.teams'))
+                ->onDelete('cascade');
+            $table->foreign('tournament_id')
+                ->references('id')
+                ->on(config('leaguefy-manager.database.tables.tournaments'))
+                ->onDelete('cascade');
         });
     }
 

@@ -2,9 +2,6 @@
 
 namespace Leaguefy\LeaguefyManager\Controllers;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Leaguefy\LeaguefyManager\Models\Game;
 use Illuminate\Http\Request;
 use Leaguefy\LeaguefyManager\Services\GamesService;
 use Leaguefy\LeaguefyManager\Traits\ApiResource;
@@ -24,7 +21,7 @@ class GamesController extends Controller
      */
     public function index()
     {
-        $games = $this->gamesService->list();
+        $games = $this->gamesService->list()->load(['teams', 'tournaments']);
 
         return $this->data($games)->response();
     }
@@ -35,22 +32,7 @@ class GamesController extends Controller
     public function store(Request $request)
     {
         try {
-            $validate = Validator::make($request->all(),
-                ['name' => 'required'],
-            );
-
-            if ($validate->fails()) {
-                return $this
-                    ->status(400)
-                    ->errors($validate->errors())
-                    ->message('Validation error')
-                    ->response();
-            }
-
-            $game = Game::create([
-                'name' => $request->name,
-                'slug' => Str::slug($request->name, '-'),
-            ]);
+            $game = $this->gamesService->store($request);
 
             return $this
                 ->data($game)
@@ -68,24 +50,24 @@ class GamesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $game)
+    public function show(int $id)
     {
-        return $this->data(Game::find($game)->load(['teams']))->response();
+        return $this->data($this->gamesService->find($id)->load(['teams']))->response();
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Game $game)
+    public function update(int $id, Request $request)
     {
-        //
+        return $this->gamesService->update($id, $request)->load(['teams']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Game $game)
+    public function destroy(int $id)
     {
-        //
+        return $this->gamesService->destroy($id);
     }
 }

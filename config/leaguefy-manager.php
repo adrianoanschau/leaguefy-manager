@@ -11,11 +11,13 @@ return [
 
         'tables' => [
             'games' => 'leaguefy_games',
-            'tournaments' => 'leaguefy_tournaments',
             'teams' => 'leaguefy_teams',
+            'tournaments' => 'leaguefy_tournaments',
             'tournaments_teams' => 'leaguefy_tournaments_teams',
-            'matches' => 'leaguefy_matches',
             'configs' => 'leaguefy_tournament_configs',
+            'stages' => 'leaguefy_stages',
+            'stage_parents' => 'leaguefy_stage_parents',
+            'matches' => 'leaguefy_matches',
         ],
     ],
 ];

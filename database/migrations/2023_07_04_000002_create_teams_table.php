@@ -3,9 +3,8 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Leaguefy\LeaguefyManager\Enums\TournamentStatus;
 
-class CreateTournamentsTable extends Migration
+class CreateTeamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,15 +13,16 @@ class CreateTournamentsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('leaguefy-manager.database.tables.tournaments'), function (Blueprint $table) {
+        Schema::create(config('leaguefy-manager.database.tables.teams'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('slug')->unique();
             $table->unsignedBigInteger('game_id');
-            $table->foreign('game_id')->references('id')->on(config('leaguefy-manager.database.tables.games'));
-            $table->boolean('open_for_subscriptions')->default(0);
-            $table->enum('status', TournamentStatus::values())->default(TournamentStatus::CREATED());
             $table->timestamps();
+
+            $table->foreign('game_id')
+                ->references('id')
+                ->on(config('leaguefy-manager.database.tables.games'));
         });
     }
 
@@ -33,6 +33,6 @@ class CreateTournamentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('leaguefy-manager.database.tables.tournaments'));
+        Schema::dropIfExists(config('leaguefy-manager.database.tables.teams'));
     }
 }

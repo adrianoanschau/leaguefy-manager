@@ -2,10 +2,6 @@
 
 namespace Leaguefy\LeaguefyManager\Controllers;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Leaguefy\LeaguefyManager\Models\Game;
-use Leaguefy\LeaguefyManager\Models\Team;
 use Illuminate\Http\Request;
 use Leaguefy\LeaguefyManager\Services\TeamsService;
 use Leaguefy\LeaguefyManager\Traits\ApiResource;
@@ -25,7 +21,7 @@ class TeamsController extends Controller
      */
     public function index()
     {
-        $teams = $this->teamsService->list();
+        $teams = $this->teamsService->list()->load(['game']);
 
         return $this->data($teams)->response();
     }
@@ -36,27 +32,7 @@ class TeamsController extends Controller
     public function store(Request $request)
     {
         try {
-            $validate = Validator::make($request->all(),
-                [
-                    'name' => 'required',
-                    'game' => 'required',
-                ],
-            );
-
-            if ($validate->fails()) {
-                return $this
-                    ->status(400)
-                    ->errors($validate->errors())
-                    ->message('Validation error')
-                    ->response();
-            }
-
-            $game = Game::where('slug', $request->game)->first();
-
-            $team = $game->teams()->create([
-                'name' => $request->name,
-                'slug' => Str::slug($request->name, '-'),
-            ])->load(['game']);
+            $team = $this->teamsService->store($request)->load(['game']);
 
             return $this
                 ->data($team)
@@ -74,24 +50,24 @@ class TeamsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $team)
+    public function show(int $id)
     {
-        return $this->data(Team::find($team)->load(['game']))->response();
+        return $this->data($this->teamsService->find($id)->load(['game']))->response();
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Team $team)
+    public function update(int $id, Request $request)
     {
-        //
+        return $this->teamsService->update($id, $request)->load(['game']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Team $team)
+    public function destroy(int $id)
     {
-        //
+        return $this->teamsService->destroy($id);
     }
 }

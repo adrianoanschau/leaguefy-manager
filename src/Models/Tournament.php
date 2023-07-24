@@ -48,6 +48,11 @@ class Tournament extends Model
         return $this->belongsTo(Game::class);
     }
 
+    public function stages()
+    {
+        return $this->hasMany(Stage::class);
+    }
+
     public function subscribers()
     {
         return $this->belongsToMany(
