@@ -36,7 +36,8 @@ class CreateStagesTable extends Migration
             $table->unique(['tournament_id', 'lane', 'position']);
             $table->foreign('tournament_id')
                 ->references('id')
-                ->on(config('leaguefy-manager.database.tables.tournaments'));
+                ->on(config('leaguefy-manager.database.tables.tournaments'))
+                ->onDelete('cascade');
         });
     }
 
