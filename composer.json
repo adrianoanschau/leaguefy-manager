@@ -1,28 +1,29 @@
 {
-    "name": "leaguefy/leaguefy-manager",
-    "description": "Leaguefy Manager - E-Sports Manager.",
-    "type": "library",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Leaguefy\\LeaguefyManager\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Adriano Anschau"
-        }
-    ],
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Leaguefy\\LeaguefyManager\\LeaguefyManagerServiceProvider"
-            ],
-            "aliases": {
-                "LeaguefyManager": "Leaguefy\\LeaguefyManager\\Facades\\LeaguefyManager"
-            }
-        }
-    },
-    "minimum-stability": "dev",
-    "require": {}
+  "name": "leaguefy/leaguefy-manager",
+  "description": "Leaguefy Manager - E-Sports Manager.",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Leaguefy\\LeaguefyManager\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Adriano Anschau"
+    }
+  ],
+  "require": {},
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Leaguefy\\LeaguefyManager\\LeaguefyManagerServiceProvider"
+      ],
+      "aliases": {
+        "LeaguefyManager": "Leaguefy\\LeaguefyManager\\Facades\\LeaguefyManager"
+      }
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
