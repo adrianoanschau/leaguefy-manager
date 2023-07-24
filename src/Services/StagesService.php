@@ -5,6 +5,8 @@ namespace Leaguefy\LeaguefyManager\Services;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Enum;
+use Leaguefy\LeaguefyManager\Enums\StageTypes;
 use Leaguefy\LeaguefyManager\Models\Stage;
 use Leaguefy\LeaguefyManager\Models\Tournament;
 
@@ -21,9 +23,7 @@ class StagesService
     {
         $validate = Validator::make($request->all(),
             [
-                'name' => 'string',
                 'tournament' => 'required|string',
-                'type' => 'string',
                 'lane' => 'integer|nullable',
                 'position' => 'integer|nullable',
                 'laneInsert' => 'string|nullable',
@@ -69,11 +69,48 @@ class StagesService
         }
 
         return $tournament->stages()->create([
-            'name' => $request->name,
-            'type' => $request->type,
             'lane' => $lane,
             'position' => $position,
         ]);
+    }
+
+    public function update(int $stageId, Request $request)
+    {
+        $validate = Validator::make($request->all(),
+            [
+                'tournament' => 'required|string',
+                'name' => 'string|nullable',
+                'type' => [new Enum(StageTypes::class)],
+                'competitors' => 'integer|nullable',
+                'classify' => 'integer|nullable',
+            ],
+        );
+
+        if ($validate->fails()) {
+            throw new Exception($validate->errors());
+        }
+
+        $tournament = Tournament::where('slug', $request->tournament)->first();
+
+        $update = [];
+
+        if (!is_null($request->name)) {
+            $update['name'] = $request->name;
+        }
+
+        if (!is_null($request->type)) {
+            $update['type'] = $request->type;
+        }
+
+        if (!is_null($request->competitors)) {
+            $update['competitors'] = $request->competitors;
+        }
+
+        if (!is_null($request->classify)) {
+            $update['classify'] = $request->classify;
+        }
+
+        return $tournament->stages->find($stageId)->update($update);
     }
 
     public function connect(Request $request)

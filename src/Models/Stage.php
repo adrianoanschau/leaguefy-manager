@@ -22,11 +22,15 @@ class Stage extends Model
         'lane',
         'position',
         'groups',
+        'competitors',
+        'classify'
     ];
 
     public $casts = [
         'position' => 'integer',
         'lane' => 'integer',
+        'competitors' => 'integer',
+        'classify' => 'integer',
     ];
 
     /**

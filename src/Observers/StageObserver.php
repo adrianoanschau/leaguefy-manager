@@ -11,9 +11,11 @@ class StageObserver
     {
         return collect([
             'type' => StageTypes::SINGLE(),
+            'groups' => json_encode([["size" => 4]]),
             'lane' => 0,
             'position' => 0,
-            'groups' => json_encode([["size" => 2]]),
+            'competitors' => 4,
+            'classify' => 1,
         ]);
     }
 
