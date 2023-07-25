@@ -2,53 +2,38 @@
 
 namespace Leaguefy\LeaguefyManager\Services;
 
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Leaguefy\LeaguefyManager\Models\Game;
+use Leaguefy\LeaguefyManager\Repositories\GameRepository;
+use Leaguefy\LeaguefyManager\Requests\StoreGameRequest;
+use Leaguefy\LeaguefyManager\Requests\UpdateGameRequest;
 
 class GamesService
 {
-    public function __construct(private Game $model) {}
+    public function __construct(
+        private GameRepository $repository
+    ) {}
 
     public function list()
     {
-        return $this->model->all();
+        return $this->repository->all();
     }
 
-    public function store(Request $request)
+    public function find(int $id)
     {
-        $validate = Validator::make($request->all(),
-            ['name' => 'required|string'],
-        );
+        return $this->repository->find($id);
+    }
 
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        return Game::create([
+    public function store(StoreGameRequest $request)
+    {
+        return $this->repository->create([
             'name' => $request->name,
             'slug' => Str::slug($request->name, '-'),
         ]);
     }
 
-    public function find(int $id)
+    public function update(int $id, UpdateGameRequest $request)
     {
-        return Game::find($id);
-    }
-
-    public function update(int $id, Request $request)
-    {
-        $validate = Validator::make($request->all(),
-            ['name' => 'string'],
-        );
-
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        $game = $this->find($id);
+        $game = $this->repository->find($id);
 
         if ($request->name) {
             $game->name = $request->name;
@@ -60,6 +45,6 @@ class GamesService
 
     public function destroy(int $id)
     {
-        return Game::destroy($id);
+        return $this->repository->delete($id);
     }
 }

@@ -2,36 +2,31 @@
 
 namespace Leaguefy\LeaguefyManager\Services;
 
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Leaguefy\LeaguefyManager\Models\Game;
-use Leaguefy\LeaguefyManager\Models\Team;
+use Leaguefy\LeaguefyManager\Repositories\GameRepository;
+use Leaguefy\LeaguefyManager\Repositories\TeamRepository;
+use Leaguefy\LeaguefyManager\Requests\StoreTeamRequest;
+use Leaguefy\LeaguefyManager\Requests\UpdateTeamRequest;
 
 class TeamsService
 {
-    public function __construct(private Team $model) {}
-
+    public function __construct(
+        private TeamRepository $repository,
+        private GameRepository $gameRepository,
+    ) {}
     public function list()
     {
-        return $this->model->all();
+        return $this->repository->all();
     }
 
-    public function store(Request $request)
+    public function find(int $id)
     {
-        $validate = Validator::make($request->all(),
-            [
-                'name' => 'required|string',
-                'game' => 'required|string',
-            ],
-        );
+        return $this->repository->find($id);
+    }
 
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        $game = Game::where('slug', $request->game)->first();
+    public function store(StoreTeamRequest $request)
+    {
+        $game = $this->gameRepository->findBy('slug', $request->game);
 
         return $game->teams()->create([
             'name' => $request->name,
@@ -39,22 +34,9 @@ class TeamsService
         ]);
     }
 
-    public function find(int $id)
+    public function update(int $id, UpdateTeamRequest $request)
     {
-        return Team::find($id);
-    }
-
-    public function update(int $id, Request $request)
-    {
-        $validate = Validator::make($request->all(),
-            ['name' => 'string'],
-        );
-
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        $team = $this->find($id);
+        $team = $this->repository->find($id);
 
         if ($request->name) {
             $team->name = $request->name;
@@ -66,6 +48,6 @@ class TeamsService
 
     public function destroy(int $id)
     {
-        return Team::destroy($id);
+        return $this->repository->delete($id);
     }
 }

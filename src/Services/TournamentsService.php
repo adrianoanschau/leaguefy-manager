@@ -2,36 +2,31 @@
 
 namespace Leaguefy\LeaguefyManager\Services;
 
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Leaguefy\LeaguefyManager\Models\Game;
-use Leaguefy\LeaguefyManager\Models\Tournament;
+use Leaguefy\LeaguefyManager\Repositories\GameRepository;
+use Leaguefy\LeaguefyManager\Repositories\TournamentRepository;
+use Leaguefy\LeaguefyManager\Requests\StoreTournamentRequest;
+use Leaguefy\LeaguefyManager\Requests\UpdateTournamentRequest;
 
 class TournamentsService
 {
-    public function __construct(private Tournament $model) {}
-
+    public function __construct(
+        private TournamentRepository $repository,
+        private GameRepository $gameRepository,
+    ) {}
     public function list()
     {
-        return $this->model->all();
+        return $this->repository->all();
     }
 
-    public function store(Request $request)
+    public function find(int $id)
     {
-        $validate = Validator::make($request->all(),
-            [
-                'name' => 'required',
-                'game' => 'required',
-            ],
-        );
+        return $this->repository->find($id);
+    }
 
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        $game = Game::where('slug', $request->game)->first();
+    public function store(StoreTournamentRequest $request)
+    {
+        $game = $this->gameRepository->findBy('slug', $request->game);
 
         return $game->tournaments()->create([
             'name' => $request->name,
@@ -39,22 +34,9 @@ class TournamentsService
         ]);
     }
 
-    public function find(int $id)
+    public function update(int $id, UpdateTournamentRequest $request)
     {
-        return Tournament::find($id);
-    }
-
-    public function update(int $id, Request $request)
-    {
-        $validate = Validator::make($request->all(),
-            ['name' => 'string'],
-        );
-
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        $tournament = $this->find($id);
+        $tournament = $this->repository->find($id);
 
         if ($request->name) {
             $tournament->name = $request->name;
@@ -66,6 +48,6 @@ class TournamentsService
 
     public function destroy(int $id)
     {
-        return Tournament::destroy($id);
+        return $this->repository->delete($id);
     }
 }

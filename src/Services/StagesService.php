@@ -2,40 +2,27 @@
 
 namespace Leaguefy\LeaguefyManager\Services;
 
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Enum;
-use Leaguefy\LeaguefyManager\Enums\StageTypes;
-use Leaguefy\LeaguefyManager\Models\Stage;
-use Leaguefy\LeaguefyManager\Models\Tournament;
+use Leaguefy\LeaguefyManager\Repositories\StageRepository;
+use Leaguefy\LeaguefyManager\Repositories\TournamentRepository;
+use Leaguefy\LeaguefyManager\Requests\ConnectStageRequest;
+use Leaguefy\LeaguefyManager\Requests\StoreStageRequest;
+use Leaguefy\LeaguefyManager\Requests\UpdateStageRequest;
 
 class StagesService
 {
-    public function __construct(private Stage $model) {}
+    public function __construct(
+        private StageRepository $repository,
+        private TournamentRepository $tournamentRepository,
+    ) {}
 
     public function find(int $id)
     {
-        return Stage::find($id);
+        return $this->repository->find($id);
     }
 
-    public function store(Request $request)
+    public function store(StoreStageRequest $request)
     {
-        $validate = Validator::make($request->all(),
-            [
-                'tournament' => 'required|string',
-                'lane' => 'integer|nullable',
-                'position' => 'integer|nullable',
-                'laneInsert' => 'string|nullable',
-                'positionInsert' => 'string|nullable',
-            ],
-        );
-
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        $tournament = Tournament::where('slug', $request->tournament)->first();
+        $tournament = $this->tournamentRepository->findBy('slug', $request->tournament);
 
         $all = $tournament->stages;
         $lane = $request->lane;
@@ -74,23 +61,9 @@ class StagesService
         ]);
     }
 
-    public function update(int $stageId, Request $request)
+    public function update(int $stageId, UpdateStageRequest $request)
     {
-        $validate = Validator::make($request->all(),
-            [
-                'tournament' => 'required|string',
-                'name' => 'string|nullable',
-                'type' => [new Enum(StageTypes::class)],
-                'competitors' => 'integer|nullable',
-                'classify' => 'integer|nullable',
-            ],
-        );
-
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        $tournament = Tournament::where('slug', $request->tournament)->first();
+        $tournament = $this->tournamentRepository->findBy('slug', $request->tournament);
 
         $update = [];
 
@@ -113,21 +86,9 @@ class StagesService
         return $tournament->stages->find($stageId)->update($update);
     }
 
-    public function connect(Request $request)
+    public function connect(ConnectStageRequest $request)
     {
-        $validate = Validator::make($request->all(),
-            [
-                'tournament' => 'required|string',
-                'parent' => 'array:lane,position',
-                'child' => 'array:lane,position',
-            ],
-        );
-
-        if ($validate->fails()) {
-            throw new Exception($validate->errors());
-        }
-
-        $tournament = Tournament::where('slug', $request->tournament)->first();
+        $tournament = $this->tournamentRepository->findBy('slug', $request->tournament);
 
         $parent = $tournament->stages
             ->where('lane', $request->parent['lane'])
@@ -150,8 +111,8 @@ class StagesService
         return 'connected';
     }
 
-    public function destroy(int $stage)
+    public function destroy(int $id)
     {
-        return Stage::destroy($stage);
+        return $this->repository->delete($id);
     }
 }

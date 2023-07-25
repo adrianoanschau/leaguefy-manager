@@ -17,6 +17,7 @@
   "extra": {
     "laravel": {
       "providers": [
+        "Leaguefy\\LeaguefyManager\\RepositoryServiceProvider",
         "Leaguefy\\LeaguefyManager\\LeaguefyManagerServiceProvider"
       ],
       "aliases": {
