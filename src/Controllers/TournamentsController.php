@@ -2,7 +2,8 @@
 
 namespace Leaguefy\LeaguefyManager\Controllers;
 
-use Illuminate\Http\Request;
+use Leaguefy\LeaguefyManager\Requests\StoreTournamentRequest;
+use Leaguefy\LeaguefyManager\Requests\UpdateTournamentRequest;
 use Leaguefy\LeaguefyManager\Services\TournamentsService;
 use Leaguefy\LeaguefyManager\Traits\ApiResource;
 
@@ -29,22 +30,14 @@ class TournamentsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTournamentRequest $request)
     {
-        try {
-            $tournament = $this->tournamentsService->store($request)->load(['game', 'stages']);
+        $tournament = $this->tournamentsService->store($request)->load(['game', 'stages']);
 
-            return $this
-                ->data($tournament)
-                ->message('Tournament Created Successfully')
-                ->response();
-
-        } catch (\Throwable $th) {
-            return $this
-                ->status(500)
-                ->message($th->getMessage())
-                ->response();
-        }
+        return $this
+            ->data($tournament)
+            ->message('Tournament Created Successfully')
+            ->response();
     }
 
     /**
@@ -58,7 +51,7 @@ class TournamentsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateTournamentRequest $request)
     {
         return $this->tournamentsService->update($id, $request)->load(['game', 'stages']);
     }

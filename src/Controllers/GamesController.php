@@ -2,7 +2,8 @@
 
 namespace Leaguefy\LeaguefyManager\Controllers;
 
-use Illuminate\Http\Request;
+use Leaguefy\LeaguefyManager\Requests\StoreGameRequest;
+use Leaguefy\LeaguefyManager\Requests\UpdateGameRequest;
 use Leaguefy\LeaguefyManager\Services\GamesService;
 use Leaguefy\LeaguefyManager\Traits\ApiResource;
 
@@ -29,22 +30,14 @@ class GamesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreGameRequest $request)
     {
-        try {
-            $game = $this->gamesService->store($request);
+        $game = $this->gamesService->store($request);
 
-            return $this
-                ->data($game)
-                ->message('Game Created Successfully')
-                ->response();
-
-        } catch (\Throwable $th) {
-            return $this
-                ->status(500)
-                ->message($th->getMessage())
-                ->response();
-        }
+        return $this
+            ->data($game)
+            ->message('Game Created Successfully')
+            ->response();
     }
 
     /**
@@ -58,7 +51,7 @@ class GamesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(int $id, Request $request)
+    public function update(int $id, UpdateGameRequest $request)
     {
         return $this->gamesService->update($id, $request)->load(['teams']);
     }
