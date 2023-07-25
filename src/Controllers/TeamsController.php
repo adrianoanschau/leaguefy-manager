@@ -5,16 +5,13 @@ namespace Leaguefy\LeaguefyManager\Controllers;
 use Leaguefy\LeaguefyManager\Requests\StoreTeamRequest;
 use Leaguefy\LeaguefyManager\Requests\UpdateTeamRequest;
 use Leaguefy\LeaguefyManager\Services\TeamsService;
-use Leaguefy\LeaguefyManager\Traits\ApiResource;
 
 class TeamsController extends Controller
 {
-    use ApiResource;
-
     public function __construct(
-        private TeamsService $teamsService,
+        private TeamsService $service,
     ) {
-        $this->include(['game']);
+        $this->include(['game', 'tournaments']);
     }
 
     /**
@@ -22,7 +19,8 @@ class TeamsController extends Controller
      */
     public function index()
     {
-        $teams = $this->teamsService->list()->load(['game']);
+        $teams = $this->service->list()
+            ->load(['game', 'tournaments']);
 
         return $this->data($teams)->response();
     }
@@ -32,7 +30,8 @@ class TeamsController extends Controller
      */
     public function store(StoreTeamRequest $request)
     {
-        $team = $this->teamsService->store($request)->load(['game']);
+        $team = $this->service->store($request)
+            ->load(['game']);
 
         return $this
             ->data($team)
@@ -45,7 +44,11 @@ class TeamsController extends Controller
      */
     public function show(int $id)
     {
-        return $this->data($this->teamsService->find($id)->load(['game']))->response();
+        $team = $this->service->find($id)
+            ->load(['game', 'tournaments']);
+
+        return $this->data($team)
+            ->response();
     }
 
     /**
@@ -53,7 +56,12 @@ class TeamsController extends Controller
      */
     public function update(int $id, UpdateTeamRequest $request)
     {
-        return $this->teamsService->update($id, $request)->load(['game']);
+        $team = $this->service->update($id, $request)
+            ->load(['game', 'tournaments']);
+
+        return $this->data($team)
+            ->message('Team Updated Successfully')
+            ->response();
     }
 
     /**
@@ -61,6 +69,9 @@ class TeamsController extends Controller
      */
     public function destroy(int $id)
     {
-        return $this->teamsService->destroy($id);
+        $this->service->destroy($id);
+
+        return $this->message('Team Removed Successfully')
+            ->response();
     }
 }

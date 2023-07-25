@@ -1,12 +1,15 @@
 <?php
 
 namespace Leaguefy\LeaguefyManager\Traits;
+
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 trait ApiResource
 {
+    private bool $isSingle = false;
+
     private Collection|null $data = null;
 
     private Collection|null $relations = null;
@@ -39,6 +42,7 @@ trait ApiResource
     {
         if (get_parent_class($data) === Model::class) {
             $data = collect([$data]);
+            $this->isSingle = true;
         }
 
         if (get_class($data) === EloquentCollection::class) {
@@ -93,7 +97,7 @@ trait ApiResource
                 });
             }
 
-            if (!is_null($relationships)) {
+            if (!is_null($relationships) && $relationships->isNotEmpty()) {
                 $resource['relationships'] = $relationships;
             }
 
@@ -130,10 +134,10 @@ trait ApiResource
         ];
 
         if (!is_null($this->data)) {
-            $response['data'] = $this->data;
+            $response['data'] = $this->isSingle ? $this->data->get(0) : $this->data;
         }
 
-        if (!is_null($this->included)) {
+        if (!is_null($this->included) && $this->included->isNotEmpty()) {
             $response['included'] = $this->included;
         }
 

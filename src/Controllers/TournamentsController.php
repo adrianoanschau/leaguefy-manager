@@ -5,16 +5,13 @@ namespace Leaguefy\LeaguefyManager\Controllers;
 use Leaguefy\LeaguefyManager\Requests\StoreTournamentRequest;
 use Leaguefy\LeaguefyManager\Requests\UpdateTournamentRequest;
 use Leaguefy\LeaguefyManager\Services\TournamentsService;
-use Leaguefy\LeaguefyManager\Traits\ApiResource;
 
 class TournamentsController extends Controller
 {
-    use ApiResource;
-
     public function __construct(
-        private TournamentsService $tournamentsService,
+        private TournamentsService $service,
     ) {
-        $this->include(['game', 'stages']);
+        $this->include(['config', 'game', 'stages', 'subscribers', 'matches']);
     }
 
     /**
@@ -22,9 +19,11 @@ class TournamentsController extends Controller
      */
     public function index()
     {
-        $tournaments = $this->tournamentsService->list()->load(['game', 'stages']);
+        $tournaments = $this->service->list()
+            ->load(['config', 'game', 'stages', 'subscribers', 'matches']);
 
-        return $this->data($tournaments)->response();
+        return $this->data($tournaments)
+            ->response();
     }
 
     /**
@@ -32,7 +31,8 @@ class TournamentsController extends Controller
      */
     public function store(StoreTournamentRequest $request)
     {
-        $tournament = $this->tournamentsService->store($request)->load(['game', 'stages']);
+        $tournament = $this->service->store($request)
+            ->load(['game', 'config', 'stages']);
 
         return $this
             ->data($tournament)
@@ -45,7 +45,11 @@ class TournamentsController extends Controller
      */
     public function show(int $id)
     {
-        return $this->data($this->tournamentsService->find($id)->load(['game', 'stages']))->response();
+        $tournament = $this->service->find($id)
+            ->load(['config', 'game', 'stages', 'subscribers', 'matches']);
+
+        return $this->data($tournament)
+            ->response();
     }
 
     /**
@@ -53,7 +57,12 @@ class TournamentsController extends Controller
      */
     public function update(int $id, UpdateTournamentRequest $request)
     {
-        return $this->tournamentsService->update($id, $request)->load(['game', 'stages']);
+        $tournament = $this->service->update($id, $request)
+            ->load(['config', 'game', 'stages', 'subscribers', 'matches']);
+
+        return $this->data($tournament)
+            ->message('Tournament Updated Successfully')
+            ->response();
     }
 
     /**
@@ -61,6 +70,9 @@ class TournamentsController extends Controller
      */
     public function destroy(int $id)
     {
-        return $this->tournamentsService->destroy($id);
+        $this->service->destroy($id);
+
+        return $this->message('Tournament Removed Successfully')
+            ->response();
     }
 }
