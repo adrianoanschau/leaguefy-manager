@@ -13,7 +13,7 @@ class CreateTournamentConfigsTable extends Migration
     {
         Schema::create(config('leaguefy-manager.database.tables.configs'), function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedBigInteger('tournament_id')
+            $table->unsignedInteger('tournament_id')
                 ->unique();
             $table->json('options')
                 ->nullable();

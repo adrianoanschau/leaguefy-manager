@@ -30,7 +30,7 @@ class CreateStagesTable extends Migration
                 ->default(1);
             $table->json('groups')
                 ->default(json_encode([["size" => 4]]));
-            $table->unsignedBigInteger('tournament_id');
+            $table->unsignedInteger('tournament_id');
             $table->timestamps();
 
             $table->unique(['tournament_id', 'lane', 'position']);

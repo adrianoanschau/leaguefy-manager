@@ -19,9 +19,9 @@ class CreateMatchesTable extends Migration
             $table->integer('round');
             $table->integer('group');
             $table->integer('match');
-            $table->unsignedBigInteger('left_team_id');
-            $table->unsignedBigInteger('right_team_id');
-            $table->unsignedBigInteger('tournament_id');
+            $table->unsignedInteger('left_team_id');
+            $table->unsignedInteger('right_team_id');
+            $table->unsignedInteger('tournament_id');
             $table->integer('left_score')
                 ->nullable();
             $table->integer('right_score')

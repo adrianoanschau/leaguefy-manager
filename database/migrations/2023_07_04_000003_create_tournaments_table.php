@@ -19,7 +19,7 @@ class CreateTournamentsTable extends Migration
             $table->string('name');
             $table->string('slug')
                 ->unique();
-            $table->unsignedBigInteger('game_id');
+            $table->unsignedInteger('game_id');
             $table->boolean('open_for_subscriptions')
                 ->default(0);
             $table->enum('status', TournamentStatus::values())
