@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 class LeaguefyManager
 {
+    public const VERSION = '0.1.4';
+
     public $migrations = __DIR__.'/../database/migrations';
 
     public $api_routes = __DIR__.'/../routes/api.php';
@@ -17,5 +19,10 @@ class LeaguefyManager
             'middleware' => config('leaguefy-manager.route.middleware'),
             'as' => 'leaguefy.api.',
         ], $this->api_routes);
+    }
+
+    public static function getLongVersion()
+    {
+        return sprintf('Leaguefy Manager <comment>version</comment> <info>%s</info>', self::VERSION);
     }
 }
