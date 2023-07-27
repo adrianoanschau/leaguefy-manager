@@ -42,7 +42,7 @@ abstract class BaseRepository implements RepositoryInterface
 
     public static function delete(int $id): int
     {
-        return self::loadModel()::query()->where(['id' => $id])->delete();
+        return self::loadModel()::query()->find($id)->delete();
     }
 
 }

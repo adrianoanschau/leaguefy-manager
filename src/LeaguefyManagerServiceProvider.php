@@ -3,10 +3,6 @@
 namespace Leaguefy\LeaguefyManager;
 
 use Illuminate\Support\ServiceProvider;
-use Leaguefy\LeaguefyManager\Models\Tournament;
-use Leaguefy\LeaguefyManager\Models\Stage;
-use Leaguefy\LeaguefyManager\Observers\TournamentObserver;
-use Leaguefy\LeaguefyManager\Observers\StageObserver;
 
 class LeaguefyManagerServiceProvider extends ServiceProvider
 {
@@ -18,6 +14,8 @@ class LeaguefyManagerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->commands($this->commands);
+
+        $this->app->register(LeaguefyManagerEventServiceProvider::class);
     }
 
     public function boot(LeaguefyManager $manager)
@@ -31,8 +29,5 @@ class LeaguefyManagerServiceProvider extends ServiceProvider
         }
 
         $this->app->booted(fn () => $manager->routes());
-
-        Tournament::observe(TournamentObserver::class);
-        Stage::observe(StageObserver::class);
     }
 }

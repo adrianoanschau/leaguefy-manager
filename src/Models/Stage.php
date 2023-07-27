@@ -3,9 +3,8 @@
 namespace Leaguefy\LeaguefyManager\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Leaguefy\LeaguefyManager\Enums\StageTypes;
-use Leaguefy\LeaguefyManager\Traits\IsRelationLoaded;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Leaguefy\LeaguefyManager\Traits\IsRelationLoaded;
 
 class Stage extends Model
 {
