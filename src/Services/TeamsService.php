@@ -19,7 +19,7 @@ class TeamsService
         return $this->repository->all();
     }
 
-    public function find(int $id)
+    public function find(string $id)
     {
         return $this->repository->find($id);
     }
@@ -34,7 +34,7 @@ class TeamsService
         ]);
     }
 
-    public function update(int $id, UpdateTeamRequest $request)
+    public function update(string $id, UpdateTeamRequest $request)
     {
         $team = $this->repository->find($id);
 
@@ -46,7 +46,7 @@ class TeamsService
         return $team->save();
     }
 
-    public function destroy(int $id)
+    public function destroy(string $id)
     {
         return $this->repository->delete($id);
     }

@@ -18,7 +18,7 @@ class GamesService
         return $this->repository->all();
     }
 
-    public function find(int $id)
+    public function find(string $id)
     {
         return $this->repository->find($id);
     }
@@ -31,7 +31,7 @@ class GamesService
         ]);
     }
 
-    public function update(int $id, UpdateGameRequest $request)
+    public function update(string $id, UpdateGameRequest $request)
     {
         $game = $this->repository->find($id);
 
@@ -43,7 +43,7 @@ class GamesService
         return $game->save();
     }
 
-    public function destroy(int $id)
+    public function destroy(string $id)
     {
         return $this->repository->delete($id);
     }

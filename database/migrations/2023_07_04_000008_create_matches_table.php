@@ -14,14 +14,14 @@ class CreateMatchesTable extends Migration
     public function up()
     {
         Schema::create(config('leaguefy-manager.database.tables.matches'), function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->integer('stage');
             $table->integer('round');
             $table->integer('group');
             $table->integer('match');
-            $table->unsignedInteger('left_team_id');
-            $table->unsignedInteger('right_team_id');
-            $table->unsignedInteger('tournament_id');
+            $table->foreignUuid('tournament_id');
+            $table->foreignUuid('left_team_id');
+            $table->foreignUuid('right_team_id');
             $table->integer('left_score')
                 ->nullable();
             $table->integer('right_score')

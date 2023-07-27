@@ -12,8 +12,8 @@ class CreateTournamentConfigsTable extends Migration
     public function up(): void
     {
         Schema::create(config('leaguefy-manager.database.tables.configs'), function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('tournament_id')
+            $table->uuid('id')->primary();
+            $table->foreignUuid('tournament_id')
                 ->unique();
             $table->json('options')
                 ->nullable();

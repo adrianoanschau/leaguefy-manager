@@ -2,15 +2,10 @@
 
 namespace Leaguefy\LeaguefyManager\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class TournamentConfig extends Model
 {
-    protected $hidden = [
-        'id',
-    ];
-
     protected $fillable = [
         'tournament_id',
         'options',
@@ -23,13 +18,9 @@ class TournamentConfig extends Model
      */
     public function __construct(array $attributes = [])
     {
-        $connection = config('leaguefy-manager.database.connection') ?: config('database.default');
-
-        $this->setConnection($connection);
+        parent::__construct($attributes);
 
         $this->setTable(config('leaguefy-manager.database.tables.configs'));
-
-        parent::__construct($attributes);
     }
 
     protected function options(): Attribute

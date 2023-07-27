@@ -15,7 +15,7 @@ class StagesService
         private TournamentRepository $tournamentRepository,
     ) {}
 
-    public function find(int $id)
+    public function find(string $id)
     {
         return $this->repository->find($id);
     }
@@ -61,7 +61,7 @@ class StagesService
         ]);
     }
 
-    public function update(int $stageId, UpdateStageRequest $request)
+    public function update(string $stageId, UpdateStageRequest $request)
     {
         $tournament = $this->tournamentRepository->findBy('slug', $request->tournament);
 
@@ -111,7 +111,7 @@ class StagesService
         return 'connected';
     }
 
-    public function destroy(int $id)
+    public function destroy(string $id)
     {
         return $this->repository->delete($id);
     }

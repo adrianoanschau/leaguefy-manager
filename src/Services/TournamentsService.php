@@ -19,7 +19,7 @@ class TournamentsService
         return $this->repository->all();
     }
 
-    public function find(int $id)
+    public function find(string $id)
     {
         return $this->repository->find($id);
     }
@@ -34,7 +34,7 @@ class TournamentsService
         ]);
     }
 
-    public function update(int $id, UpdateTournamentRequest $request)
+    public function update(string $id, UpdateTournamentRequest $request)
     {
         $tournament = $this->repository->find($id);
 
@@ -46,7 +46,7 @@ class TournamentsService
         return $tournament->save();
     }
 
-    public function destroy(int $id)
+    public function destroy(string $id)
     {
         return $this->repository->delete($id);
     }

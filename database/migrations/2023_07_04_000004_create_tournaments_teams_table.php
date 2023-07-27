@@ -16,9 +16,9 @@ class CreateTournamentsTeamsTable extends Migration
         Schema::create(
             config('leaguefy-manager.database.tables.tournaments_teams'),
             function (Blueprint $table) {
-                $table->increments('id');
-                $table->unsignedInteger('tournament_id');
-                $table->unsignedInteger('team_id');
+                $table->uuid('id')->primary();
+                $table->foreignUuid('tournament_id');
+                $table->foreignUuid('team_id');
                 $table->integer('stage_entry')
                     ->default(0);
                 $table->integer('rank')

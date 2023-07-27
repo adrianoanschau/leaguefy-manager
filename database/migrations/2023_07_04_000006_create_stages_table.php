@@ -15,7 +15,7 @@ class CreateStagesTable extends Migration
     public function up()
     {
         Schema::create(config('leaguefy-manager.database.tables.stages'), function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('name')
                 ->nullable();
             $table->enum('type', StageTypes::values())
@@ -30,7 +30,7 @@ class CreateStagesTable extends Migration
                 ->default(1);
             $table->json('groups')
                 ->default(json_encode([["size" => 4]]));
-            $table->unsignedInteger('tournament_id');
+            $table->foreignUuid('tournament_id');
             $table->timestamps();
 
             $table->unique(['tournament_id', 'lane', 'position']);

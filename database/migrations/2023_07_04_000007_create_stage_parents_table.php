@@ -16,9 +16,8 @@ class CreateStageParentsTable extends Migration
         Schema::create(
             config('leaguefy-manager.database.tables.stage_parents'),
             function (Blueprint $table) {
-                $table->increments('id');
-                $table->unsignedInteger('stage_id');
-                $table->unsignedInteger('parent_id');
+                $table->foreignUuid('stage_id');
+                $table->foreignUuid('parent_id');
                 $table->timestamps();
 
 

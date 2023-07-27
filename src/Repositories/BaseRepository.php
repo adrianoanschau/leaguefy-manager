@@ -25,7 +25,7 @@ abstract class BaseRepository implements RepositoryInterface
         return self::loadModel()::query()->create($attributes);
     }
 
-    public static function find(int $id): Model | null
+    public static function find(string $id): Model | null
     {
         return self::loadModel()::query()->find($id);
     }
@@ -35,12 +35,12 @@ abstract class BaseRepository implements RepositoryInterface
         return self::loadModel()::query()->where($column, $value)->first();
     }
 
-    public static function update(int $id, array $attributes = []): int
+    public static function update(string $id, array $attributes = []): string
     {
         return self::loadModel()::query()->where(['id' => $id])->update($attributes);
     }
 
-    public static function delete(int $id): int
+    public static function delete(string $id): string
     {
         return self::loadModel()::query()->find($id)->delete();
     }

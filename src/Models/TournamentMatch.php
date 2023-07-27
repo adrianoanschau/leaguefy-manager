@@ -2,14 +2,8 @@
 
 namespace Leaguefy\LeaguefyManager\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class TournamentMatch extends Model
 {
-    protected $hidden = [
-        'id',
-    ];
-
     /**
      * Create a new Eloquent model instance.
      *
@@ -17,13 +11,9 @@ class TournamentMatch extends Model
      */
     public function __construct(array $attributes = [])
     {
-        $connection = config('leaguefy-manager.database.connection') ?: config('database.default');
-
-        $this->setConnection($connection);
+        parent::__construct($attributes);
 
         $this->setTable(config('leaguefy-manager.database.tables.matches'));
-
-        parent::__construct($attributes);
     }
 
     public function tournament()

@@ -14,10 +14,10 @@ class CreateTeamsTable extends Migration
     public function up()
     {
         Schema::create(config('leaguefy-manager.database.tables.teams'), function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->unsignedInteger('game_id');
+            $table->foreignUuid('game_id');
             $table->timestamps();
 
             $table->foreign('game_id')

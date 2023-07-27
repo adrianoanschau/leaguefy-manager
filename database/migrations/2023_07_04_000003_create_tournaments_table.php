@@ -15,11 +15,11 @@ class CreateTournamentsTable extends Migration
     public function up()
     {
         Schema::create(config('leaguefy-manager.database.tables.tournaments'), function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('slug')
                 ->unique();
-            $table->unsignedInteger('game_id');
+            $table->foreignUuid('game_id');
             $table->boolean('open_for_subscriptions')
                 ->default(0);
             $table->enum('status', TournamentStatus::values())

@@ -2,17 +2,8 @@
 
 namespace Leaguefy\LeaguefyManager\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Leaguefy\LeaguefyManager\Traits\IsRelationLoaded;
-
 class Game extends Model
 {
-    use IsRelationLoaded;
-
-    public $hidden = [
-        'id',
-    ];
-
     public $fillable = [
         'name',
         'slug',
@@ -25,13 +16,9 @@ class Game extends Model
      */
     public function __construct(array $attributes = [])
     {
-        $connection = config('leaguefy-manager.database.connection') ?: config('database.default');
-
-        $this->setConnection($connection);
+        parent::__construct($attributes);
 
         $this->setTable(config('leaguefy-manager.database.tables.games'));
-
-        parent::__construct($attributes);
     }
 
     public function tournaments()
