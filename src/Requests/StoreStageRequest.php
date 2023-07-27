@@ -22,7 +22,6 @@ class StoreStageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tournament' => 'required|string',
             'lane' => 'integer|nullable',
             'position' => 'integer|nullable',
             'laneInsert' => 'string|nullable',

@@ -4,6 +4,7 @@ namespace Leaguefy\LeaguefyManager\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
+use Leaguefy\LeaguefyManager\Enums\StageTypes;
 
 class UpdateStageRequest extends FormRequest
 {
@@ -23,7 +24,6 @@ class UpdateStageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tournament' => 'required|string',
             'name' => 'string|nullable',
             'type' => [new Enum(StageTypes::class)],
             'competitors' => 'integer|nullable',
