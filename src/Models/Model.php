@@ -10,10 +10,6 @@ abstract class Model extends EloquentModel
 {
     use IsRelationLoaded, HasUuids;
 
-    public $hidden = [
-        'id',
-    ];
-
     /**
      * Create a new Eloquent model instance.
      *

@@ -34,6 +34,6 @@ class LeaguefyManagerApiException extends Exception
             $render['trace'] = $this->getTrace();
         }
 
-        return $render;
+        return response()->json($render(), $this->getCode());
     }
 }
