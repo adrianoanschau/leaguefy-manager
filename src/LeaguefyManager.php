@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 class LeaguefyManager
 {
-    public const VERSION = '0.1.4';
+    public const VERSION = '0.1.10';
 
     public $migrations = __DIR__.'/../database/migrations';
 
