@@ -91,14 +91,10 @@ class StagesService
         $tournament = $this->tournamentRepository->findBy('slug', $request->tournament);
 
         $parent = $tournament->stages
-            ->where('lane', $request->parent['lane'])
-            ->where('position', $request->parent['position'])
-            ->first();
+            ->find($request->parent);
 
         $child = $tournament->stages
-            ->where('lane', $request->child['lane'])
-            ->where('position', $request->child['position'])
-            ->first();
+            ->find($request->child);
 
         if (!is_null($parent->children->find($child->id))) {
             $parent->children()->detach($child->id);

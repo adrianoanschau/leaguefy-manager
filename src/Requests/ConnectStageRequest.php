@@ -22,8 +22,8 @@ class ConnectStageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent' => 'array:lane,position',
-            'child' => 'array:lane,position',
+            'parent' => 'required|string',
+            'child' => 'required|string',
         ];
     }
 }
