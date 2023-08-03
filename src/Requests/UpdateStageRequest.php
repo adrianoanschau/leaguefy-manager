@@ -2,8 +2,9 @@
 
 namespace Leaguefy\LeaguefyManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Foundation\Http\FormRequest;
+use Leaguefy\LeaguefyAdmin\Rules\StageGroupsRule;
 use Leaguefy\LeaguefyManager\Enums\StageTypes;
 
 class UpdateStageRequest extends FormRequest
@@ -27,7 +28,7 @@ class UpdateStageRequest extends FormRequest
             'name' => 'string|nullable',
             'type' => [new Enum(StageTypes::class)],
             'competitors' => 'integer|nullable',
-            'classify' => 'integer|nullable',
+            'groups' => new StageGroupsRule,
         ];
     }
 }

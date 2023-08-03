@@ -2,6 +2,7 @@
 
 namespace Leaguefy\LeaguefyManager\Services;
 
+use Leaguefy\LeaguefyManager\Enums\StageTypes;
 use Leaguefy\LeaguefyManager\Repositories\StageRepository;
 use Leaguefy\LeaguefyManager\Repositories\TournamentRepository;
 use Leaguefy\LeaguefyManager\Requests\ConnectStageRequest;
@@ -64,6 +65,8 @@ class StagesService
     public function update(string $stageId, UpdateStageRequest $request)
     {
         $tournament = $this->tournamentRepository->findBy('slug', $request->tournament);
+        $stage = $tournament->stages->find($stageId);
+        $type = $stage->type;
 
         $update = [];
 
@@ -73,14 +76,42 @@ class StagesService
 
         if (!is_null($request->type)) {
             $update['type'] = $request->type;
+            $type = $request->type;
         }
 
-        if (!is_null($request->competitors)) {
-            $update['competitors'] = $request->competitors;
+        if ($type === StageTypes::SINGLE()) {
+            if (!is_null($request->competitors)) {
+                $update['competitors'] = $request->competitors;
+                $update['groups'] = [['size' => $request->competitors]];
+            } else {
+                $update['competitors'] = 4;
+                $update['groups'] = [['size' => 4]];
+            }
         }
 
-        if (!is_null($request->classify)) {
-            $update['classify'] = $request->classify;
+        if ($type === StageTypes::MULTIPLE()) {
+            if (!is_null($request->groups)) {
+                $update['competitors'] = collect($request->groups)->sum('size');
+                $update['groups'] = $request->groups;
+            } else {
+                $update['competitors'] = 8;
+                $update['groups'] = [['size' => 4], ['size' => 4]];
+            }
+        }
+
+        if ($type === StageTypes::ELIMINATION()) {
+            if (!is_null($request->groups) && is_integer($request->groups)) {
+                $update['competitors'] = $request->groups * 2;
+                $update['groups'] = array_fill(0, $request->groups, ['size' => 2]);
+            } else {
+                $update['competitors'] = 4;
+                $update['groups'] = [['size' => 2], ['size' => 2]];
+            }
+        }
+
+        if ($type === StageTypes::FINAL()) {
+            $update['competitors'] = 2;
+            $update['groups'] = [['size' => 2]];
         }
 
         return $tournament->stages->find($stageId)->update($update);

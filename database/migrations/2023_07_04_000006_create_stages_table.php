@@ -26,8 +26,6 @@ class CreateStagesTable extends Migration
                 ->default(0);
             $table->integer('competitors')
                 ->default(4);
-            $table->integer('classify')
-                ->default(1);
             $table->json('groups')
                 ->default(json_encode([["size" => 4]]));
             $table->foreignUuid('tournament_id');
